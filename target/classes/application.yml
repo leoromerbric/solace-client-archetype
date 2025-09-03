@@ -1,0 +1,81 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: solace-client-archetype
+  
+  # Configuración de Solace
+  cloud:
+    stream:
+      solace:
+        binder:
+          # Configuración del broker Solace
+          solace-java-client-properties:
+            host: ${SOLACE_HOST:tcp://localhost:55555}
+            vpn-name: ${SOLACE_VPN:default}
+            username: ${SOLACE_USERNAME:admin}
+            password: ${SOLACE_PASSWORD:admin}
+            connect-retries: 3
+            reconnect-retries: 20
+            reconnect-retry-wait-in-millis: 3000
+
+# Configuración personalizada de Solace
+solace:
+  client:
+    # Configuración del broker
+    broker:
+      host: ${SOLACE_HOST:tcp://localhost:55555}
+      vpn: ${SOLACE_VPN:default}
+      username: ${SOLACE_USERNAME:admin}
+      password: ${SOLACE_PASSWORD:admin}
+      
+    # Configuración de tópicos
+    topics:
+      notification: notifications/topic
+      events: events/topic
+      
+    # Configuración de colas
+    queues:
+      orders: orders.queue
+      notifications: notifications.queue
+      dead-letter: dead.letter.queue
+      
+    # Configuración de request-response
+    request-response:
+      request-topic: request/response/topic
+      timeout-ms: 5000
+      
+    # Configuración de reintentos
+    retry:
+      max-attempts: 3
+      initial-delay-ms: 1000
+      max-delay-ms: 10000
+      multiplier: 2.0
+
+# Configuración de actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Configuración de logging
+logging:
+  level:
+    com.solace.client.archetype: DEBUG
+    com.solacesystems: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/solace-client.log
