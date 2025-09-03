@@ -1,0 +1,45 @@
+# Configuración para tests
+server:
+  port: 0  # Puerto aleatorio para tests
+
+spring:
+  application:
+    name: solace-client-archetype-test
+
+# Configuración de Solace para tests (será mockada)
+solace:
+  client:
+    broker:
+      host: tcp://localhost:55555
+      vpn: default
+      username: test
+      password: test
+    
+    topics:
+      notification: test/notifications/topic
+      events: test/events/topic
+      
+    queues:
+      orders: test.orders.queue
+      notifications: test.notifications.queue
+      dead-letter: test.dead.letter.queue
+      
+    request-response:
+      request-topic: test/request/response/topic
+      timeout-ms: 1000
+      
+    retry:
+      max-attempts: 2
+      initial-delay-ms: 100
+      max-delay-ms: 1000
+      multiplier: 2.0
+
+# Configuración de logging para tests
+logging:
+  level:
+    com.solace.client.archetype: WARN
+    com.solacesystems: ERROR
+    org.springframework: WARN
+    org.springframework.boot.test: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"
