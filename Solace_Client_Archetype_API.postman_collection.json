@@ -1,0 +1,705 @@
+{
+  "info": {
+    "name": "Solace Client Archetype API",
+    "description": "Colección completa de APIs para el microservicio de integración con Solace",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Gestión de Tópicos",
+      "item": [
+        {
+          "name": "Publicar Mensaje en Tópico Específico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has success field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has messageId\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('messageId');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"NOTIFICATION\",\n  \"payload\": {\n    \"message\": \"Mensaje de prueba para tópico\",\n    \"priority\": \"HIGH\",\n    \"userId\": \"user123\"\n  },\n  \"headers\": {\n    \"source\": \"postman-test\",\n    \"version\": \"1.0\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics/{{topicName}}/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "{{topicName}}", "publish"]
+            },
+            "description": "Publica un mensaje en un tópico específico de Solace"
+          }
+        },
+        {
+          "name": "Publicar Notificación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"NOTIFICATION\",\n  \"payload\": {\n    \"title\": \"Nueva notificación\",\n    \"body\": \"Este es el contenido de la notificación\",\n    \"recipient\": \"user@example.com\",\n    \"category\": \"INFO\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics/notifications/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "notifications", "publish"]
+            },
+            "description": "Publica una notificación en el tópico de notificaciones configurado"
+          }
+        },
+        {
+          "name": "Publicar Evento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"EVENT\",\n  \"payload\": {\n    \"eventType\": \"USER_LOGIN\",\n    \"userId\": \"user123\",\n    \"timestamp\": \"2023-10-15T10:30:00Z\",\n    \"metadata\": {\n      \"ip\": \"192.168.1.100\",\n      \"userAgent\": \"Mozilla/5.0\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics/events/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "events", "publish"]
+            },
+            "description": "Publica un evento en el tópico de eventos configurado"
+          }
+        },
+        {
+          "name": "Suscribirse a Tópico",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/topics/{{topicName}}/subscribe",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "{{topicName}}", "subscribe"]
+            },
+            "description": "Se suscribe a un tópico específico para recibir mensajes"
+          }
+        },
+        {
+          "name": "Obtener Mensajes Consumidos de Tópico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/topics/{{topicName}}/consumed",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "{{topicName}}", "consumed"]
+            },
+            "description": "Obtiene los mensajes que han sido consumidos de un tópico específico"
+          }
+        },
+        {
+          "name": "Obtener Todos los Mensajes Consumidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/topics/consumed/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "consumed", "all"]
+            },
+            "description": "Obtiene todos los mensajes consumidos de todos los tópicos"
+          }
+        },
+        {
+          "name": "Desuscribirse de Tópico",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/topics/{{topicName}}/unsubscribe",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "{{topicName}}", "unsubscribe"]
+            },
+            "description": "Se desuscribe de un tópico específico"
+          }
+        }
+      ],
+      "description": "Operaciones relacionadas con la gestión de tópicos de Solace"
+    },
+    {
+      "name": "Gestión de Colas",
+      "item": [
+        {
+          "name": "Publicar Mensaje en Cola Específica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message published successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "    pm.expect(jsonData).to.have.property('messageId');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"CUSTOM_MESSAGE\",\n  \"payload\": {\n    \"data\": \"Mensaje personalizado para cola\",\n    \"priority\": \"MEDIUM\",\n    \"processAfter\": \"2023-10-15T11:00:00Z\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/queues/{{queueName}}/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "{{queueName}}", "publish"]
+            },
+            "description": "Publica un mensaje en una cola específica de Solace"
+          }
+        },
+        {
+          "name": "Publicar Orden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Order published successfully\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"ORDER\",\n  \"payload\": {\n    \"orderId\": \"ORD-{{$randomUUID}}\",\n    \"customerId\": \"CUST-12345\",\n    \"amount\": 150.75,\n    \"currency\": \"EUR\",\n    \"items\": [\n      {\n        \"productId\": \"PROD-001\",\n        \"quantity\": 2,\n        \"price\": 75.50\n      }\n    ],\n    \"shippingAddress\": {\n      \"street\": \"Calle Principal 123\",\n      \"city\": \"Madrid\",\n      \"country\": \"España\",\n      \"zipCode\": \"28001\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/queues/orders/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "orders", "publish"]
+            },
+            "description": "Publica una orden en la cola de órdenes configurada"
+          }
+        },
+        {
+          "name": "Publicar Notificación en Cola",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"NOTIFICATION\",\n  \"payload\": {\n    \"notificationId\": \"NOTIF-{{$randomUUID}}\",\n    \"recipient\": \"user@example.com\",\n    \"subject\": \"Confirmación de orden\",\n    \"template\": \"order_confirmation\",\n    \"parameters\": {\n      \"orderId\": \"ORD-12345\",\n      \"customerName\": \"Juan Pérez\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/queues/notifications/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "notifications", "publish"]
+            },
+            "description": "Publica una notificación en la cola de notificaciones configurada"
+          }
+        },
+        {
+          "name": "Obtener Mensajes Consumidos de Cola",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/queues/{{queueName}}/consumed",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "{{queueName}}", "consumed"]
+            },
+            "description": "Obtiene los mensajes que han sido consumidos de una cola específica"
+          }
+        },
+        {
+          "name": "Obtener Estadísticas de Cola",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/queues/{{queueName}}/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "{{queueName}}", "stats"]
+            },
+            "description": "Obtiene estadísticas detalladas de una cola específica"
+          }
+        },
+        {
+          "name": "Obtener Todos los Mensajes de Colas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/queues/consumed/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["queues", "consumed", "all"]
+            },
+            "description": "Obtiene todos los mensajes consumidos de todas las colas"
+          }
+        }
+      ],
+      "description": "Operaciones relacionadas con la gestión de colas de Solace"
+    },
+    {
+      "name": "Request-Response",
+      "item": [
+        {
+          "name": "Enviar Request Síncrono",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Request completed\", function () {",
+                  "    // El status puede ser 200 (éxito) o 500 (timeout/error)",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 500]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Response has correlation ID\", function () {",
+                  "        var jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('correlationId');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"QUERY\",\n  \"payload\": {\n    \"operation\": \"getUserInfo\",\n    \"parameters\": {\n      \"userId\": \"user123\",\n      \"includeProfile\": true,\n      \"includePreferences\": false\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/request-response/send-sync",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "send-sync"]
+            },
+            "description": "Envía un request de forma síncrona y espera la respuesta"
+          }
+        },
+        {
+          "name": "Enviar Request Asíncrono",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Request accepted\", function () {",
+                  "    pm.response.to.have.status(202);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates async processing\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "    pm.expect(jsonData.message).to.include('asíncrono');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"ASYNC_TASK\",\n  \"payload\": {\n    \"taskType\": \"dataProcessing\",\n    \"inputData\": {\n      \"dataset\": \"customer_data_2023\",\n      \"filters\": {\n        \"region\": \"Europe\",\n        \"status\": \"active\"\n      }\n    },\n    \"options\": {\n      \"priority\": \"normal\",\n      \"estimatedDuration\": \"5m\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/request-response/send-async",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "send-async"]
+            },
+            "description": "Envía un request de forma asíncrona sin esperar la respuesta"
+          }
+        },
+        {
+          "name": "Iniciar Servidor de Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/request-response/start-server/{{requestTopic}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "start-server", "{{requestTopic}}"]
+            },
+            "description": "Inicia un servidor que procesa requests en un tópico específico (útil para testing)"
+          }
+        },
+        {
+          "name": "Obtener Estadísticas Request-Response",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/request-response/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "stats"]
+            },
+            "description": "Obtiene estadísticas del servicio Request-Response"
+          }
+        },
+        {
+          "name": "Test Request-Response",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Test completed\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Test result available\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testMessage\": \"Hello Request-Response\",\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"testId\": \"{{$randomUUID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/request-response/test",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "test"]
+            },
+            "description": "Endpoint de prueba para validar el funcionamiento del patrón Request-Response"
+          }
+        }
+      ],
+      "description": "Operaciones de comunicación Request-Response con Solace"
+    },
+    {
+      "name": "Monitoreo y Salud",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Application is healthy\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Health status is UP\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('UP');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Verifica el estado de salud de la aplicación"
+          }
+        },
+        {
+          "name": "Application Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "info"]
+            },
+            "description": "Obtiene información sobre la aplicación"
+          }
+        },
+        {
+          "name": "Métricas de la Aplicación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics"]
+            },
+            "description": "Obtiene las métricas disponibles de la aplicación"
+          }
+        },
+        {
+          "name": "Métrica Específica - JVM Memory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics", "jvm.memory.used"]
+            },
+            "description": "Obtiene información específica sobre el uso de memoria JVM"
+          }
+        }
+      ],
+      "description": "Endpoints para monitoreo y verificación del estado de la aplicación"
+    },
+    {
+      "name": "Casos de Error",
+      "item": [
+        {
+          "name": "Mensaje Inválido - Sin Tipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validation error returned\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates validation failure\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(false);",
+                  "    pm.expect(jsonData.message).to.include('validación');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payload\": {\n    \"message\": \"Mensaje sin tipo especificado\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics/test-topic/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "test-topic", "publish"]
+            },
+            "description": "Intenta publicar un mensaje sin especificar el tipo (debe fallar)"
+          }
+        },
+        {
+          "name": "Mensaje Inválido - Sin Payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validation error returned\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"TEST_MESSAGE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics/test-topic/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics", "test-topic", "publish"]
+            },
+            "description": "Intenta publicar un mensaje sin payload (debe fallar)"
+          }
+        },
+        {
+          "name": "Request-Response Timeout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Timeout or error handled\", function () {",
+                  "    // Puede ser 500 (error) o 408 (timeout)",
+                  "    pm.expect(pm.response.code).to.be.oneOf([408, 500]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"LONG_RUNNING_TASK\",\n  \"payload\": {\n    \"operation\": \"timeout_test\",\n    \"duration\": \"10s\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/request-response/send-sync",
+              "host": ["{{baseUrl}}"],
+              "path": ["request-response", "send-sync"]
+            },
+            "description": "Envía un request que probablemente haga timeout (para probar manejo de errores)"
+          }
+        }
+      ],
+      "description": "Casos de prueba para validar el manejo de errores"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta antes de cada request",
+          "console.log('Ejecutando request: ' + pm.info.requestName);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta después de cada request",
+          "console.log('Response time: ' + pm.response.responseTime + 'ms');"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1",
+      "description": "URL base del microservicio Solace Client Archetype"
+    },
+    {
+      "key": "topicName",
+      "value": "test-topic",
+      "description": "Nombre del tópico para pruebas"
+    },
+    {
+      "key": "queueName",
+      "value": "test.queue",
+      "description": "Nombre de la cola para pruebas"
+    },
+    {
+      "key": "requestTopic",
+      "value": "test/request/topic",
+      "description": "Nombre del tópico para Request-Response"
+    }
+  ]
+}
